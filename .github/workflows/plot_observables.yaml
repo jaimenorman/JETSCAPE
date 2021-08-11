@@ -1,4 +1,4 @@
-name: build+regression test
+name: plot observables
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ jobs:
         make -j2
       
     - name: Generate pp events
-      run: $GITHUB_WORKSPACE/JETSCAPE/build/runJetscape $GITHUB_WORKSPACE/JETSCAPE/test/pp/config/jetscape_user_PP19_weighted.xml
+      run: $GITHUB_WORKSPACE/JETSCAPE/build/runJetscape $GITHUB_WORKSPACE/JETSCAPE/test/pp/config/jetscape_user_PP19_weighted.xml $GITHUB_WORKSPACE/JETSCAPE/config/jetscape_master.xml
 
     - name: Plot observables
       run: $GITHUB_WORKSPACE/JETSCAPE/test/plot_validation.sh -j $GITHUB_WORKSPACE/JETSCAPE -o $GITHUB_WORKSPACE/JETSCAPE/test/plot/output/new
