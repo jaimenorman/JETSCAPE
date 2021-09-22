@@ -28,6 +28,8 @@
   <JetScapeWriterHepMC> off </JetScapeWriterHepMC>
   <JetScapeWriterFinalStatePartonsAscii> off </JetScapeWriterFinalStatePartonsAscii>
   <JetScapeWriterFinalStateHadronsAscii> off </JetScapeWriterFinalStateHadronsAscii>
+  <final_state_writer_header_version> 2 </final_state_writer_header_version>
+  <write_pthat> 0 </write_pthat>
 
   <!--  Random Settings. For now, just a global  seed. -->
   <!--  Note: It's each modules responsibility to adopt it -->
