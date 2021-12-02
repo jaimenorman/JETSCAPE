@@ -66,8 +66,11 @@ template <class T> void JetScapeWriterFinalStateStream<T>::WriteEvent() {
       << "\t" << "weight\t" << std::setprecision(15) << GetHeader().GetEventWeight() << std::setprecision(6)
       << "\t" << "EPangle\t" << (GetHeader().GetEventPlaneAngle() > -999 ? GetHeader().GetEventPlaneAngle() : 0)
       << "\t" << "N_" << GetName() << "\t" << particles.size()
+      << "\t" << "vertex_x\t" << GetHeader().GetVertexX()
+      << "\t" << "vertex_y\t" << GetHeader().GetVertexY()
+      << "\t" << "vertex_z\t" << GetHeader().GetVertexZ()
       << pt_hat_text
-      <<  "\n";
+      << "\n";
 
   // Next, write the particles. Will contain either hadrons or partons based on the derived class.
   unsigned int ipart = 0;

@@ -90,6 +90,9 @@ int main(int argc, char** argv)
             << "\t" << "weight\t" << reader->GetEventWeight()
             << "\t" << "EPangle\t" << reader->GetEventPlaneAngle()
             << "\t" << "N_partons\t" << TotalPartons
+            << "\t" << "vertex_x\t" << reader->GetVertexX()
+            << "\t" << "vertex_y\t" << reader->GetVertexY()
+            << "\t" << "vertex_z\t" << reader->GetVertexZ()
             << "\t" << "|"  // As a delimiter
             << "\t" << "N"
             << "\t" << "pid"
