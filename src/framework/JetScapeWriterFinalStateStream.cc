@@ -37,6 +37,13 @@ RegisterJetScapeModule<JetScapeWriterFinalStateHadronsStream<ogzstream>>
     JetScapeWriterFinalStateHadronsStream<ogzstream>::regHadronGZ("JetScapeWriterFinalStateHadronsAsciiGZ");
 
 template <class T>
+JetScapeWriterFinalStateStream<T>::JetScapeWriterFinalStateStream():
+  output_file{},
+  headerVersion{2}
+{
+}
+
+template <class T>
 JetScapeWriterFinalStateStream<T>::JetScapeWriterFinalStateStream(string m_file_name_out) {
   SetOutputFileName(m_file_name_out);
 }
@@ -65,10 +72,14 @@ template <class T> void JetScapeWriterFinalStateStream<T>::WriteEvent() {
       << "\t" << "Event\t" << GetCurrentEvent() + 1  // +1 to index the event count from 1
       << "\t" << "weight\t" << std::setprecision(15) << GetHeader().GetEventWeight() << std::setprecision(6)
       << "\t" << "EPangle\t" << (GetHeader().GetEventPlaneAngle() > -999 ? GetHeader().GetEventPlaneAngle() : 0)
-      << "\t" << "N_" << GetName() << "\t" << particles.size()
-      << "\t" << "vertex_x\t" << GetHeader().GetVertexX()
-      << "\t" << "vertex_y\t" << GetHeader().GetVertexY()
-      << "\t" << "vertex_z\t" << GetHeader().GetVertexZ()
+      << "\t" << "N_" << GetName() << "\t" << particles.size();
+  if (headerVersion == 3) {
+    output_file
+        << "\t" << "vertex_x\t" << GetHeader().GetVertexX()
+        << "\t" << "vertex_y\t" << GetHeader().GetVertexY()
+        << "\t" << "vertex_z\t" << GetHeader().GetVertexZ();
+  }
+  output_file
       << pt_hat_text
       << "\n";
 
@@ -93,17 +104,26 @@ template <class T> void JetScapeWriterFinalStateStream<T>::WriteEvent() {
 
 template <class T> void JetScapeWriterFinalStateStream<T>::Init() {
   if (GetActive()) {
+    // We need the header version to determine how to write.
+    // NOTE: Don't require the version. If not specified, defaults to v2.
+    int result = GetXMLElementInt({"final_state_writer_header_version"}, false);
+    // If it fails to retrieve the value, it will return 0. The header version must be >= 2,
+    // so only assign if the value is actually set.
+    if (result) {
+      headerVersion = static_cast<unsigned int>(result);
+    }
+
     // Capitalize name
     std::string name = GetName();
     name[0] = toupper(name[0]);
-    JSINFO << "JetScape Final State " << name << " Stream Writer initialized with output file = "
+    JSINFO << "JetScape Final State " << name << " Stream Writer v" << headerVersion << " initialized with output file = "
            << GetOutputFileName();
     output_file.open(GetOutputFileName().c_str());
     // NOTE: This header will only be printed once at the beginning on the file.
     output_file << "#"
         // The specifics the version number. For consistency in parsing, the string
         // will always be "v<number>"
-        << "\t" << "JETSCAPE_FINAL_STATE\t" << "v2"
+        << "\t" << "JETSCAPE_FINAL_STATE\t" << "v3"
         << "\t" << "|"  // As a delimiter
         << "\t" << "N"
         << "\t" << "pid"
